@@ -1,5 +1,3 @@
-# FILL IN INFO ABOUT YOUR GAME HERE. 
+# A simple one player Black Jack Game 
 
-DO NOT LEAVE IT LIKE THIS!!!
-
-Please? Please, give me content. I'm begging you. It's not that hard. Thanks.
+Please see the file BlackJackRules.pdf to determine how the game should work, the game should match the functionality exactly.
