@@ -92,12 +92,7 @@ namespace Core
 			{
 				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().PlayerBusted();
 			}
-			
-			//trigger black jack condition if hand totals target
-			if (handVals == BlackJackManager.Target)
-			{
-				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().BlackJack();
-			}
+
 		}
 
 		//GET HAND VALUE: gets hand value via the BlackJackManager, see use in ShowValue()
