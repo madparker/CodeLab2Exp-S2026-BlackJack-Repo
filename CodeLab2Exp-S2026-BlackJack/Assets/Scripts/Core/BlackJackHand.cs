@@ -1,78 +1,93 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 
+namespace Core
+{
+	public class BlackJackHand : MonoBehaviour {
 
-public class BlackJackHand : MonoBehaviour {
+		public Text total;
+		public float xOffset;
+		public float yOffset;
+		public GameObject handBase;
+		public int handVals;
 
-	public Text total;
-	public float xOffset;
-	public float yOffset;
-	public GameObject handBase;
-	public int handVals;
-
-	protected DeckOfCards deck;
-	protected List<DeckOfCards.Card> hand;
-	bool stay = false;
-
-	// Use this for initialization
-	void Start () {
-		SetupHand();
-	}
-
-	protected virtual void SetupHand(){
-		deck = GameObject.Find("Deck").GetComponent<DeckOfCards>();
-		hand = new List<DeckOfCards.Card>();
-		HitMe();
-		HitMe();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
-
-	public void HitMe(){
-		if(!stay){
-			DeckOfCards.Card card = deck.DrawCard();
-
-			GameObject cardObj = Instantiate(Resources.Load("prefab/Card")) as GameObject;
-
-			ShowCard(card, cardObj, hand.Count);
-
-			hand.Add(card);
-
-			ShowValue();
+		protected DeckOfCards deck;
+		protected List<DeckOfCards.Card> hand;
+		bool stay = false;
+		
+		void Start () 
+		{
+			SetupHand();
 		}
-	}
 
-	protected void ShowCard(DeckOfCards.Card card, GameObject cardObj, int pos){
-		cardObj.name = card.ToString();
+		//SETUP HAND: give player two cards by hitting twice.
+		protected virtual void SetupHand()
+		{
+			deck = GameObject.Find("Deck").GetComponent<DeckOfCards>();
+			hand = new List<DeckOfCards.Card>();
+			HitMe();
+			HitMe();
 
-		cardObj.transform.SetParent(handBase.transform);
-		cardObj.GetComponent<RectTransform>().localScale = new Vector2(1, 1);
-		cardObj.GetComponent<RectTransform>().anchoredPosition = 
-			new Vector2(
-				xOffset + pos * 110, 
-				yOffset);
+			//trigger black jack condition if hand totals target
+			if (GetHandValue() == BlackJackManager.Target)
+			{
+				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().BlackJack();
+			}
+		}
 
-		cardObj.GetComponentInChildren<Text>().text = deck.GetNumberString(card);
-		cardObj.GetComponentsInChildren<Image>()[1].sprite = deck.GetSuitSprite(card);
-	}
+		//HIT ME: draw a card, show it and add value to the players hand
+		public void HitMe()
+		{
+			if(!stay)
+			{
+				DeckOfCards.Card card = deck.DrawCard();
 
-	protected virtual void ShowValue(){
-		handVals = GetHandValue();
+				GameObject cardObj = Instantiate(Resources.Load("prefab/Card")) as GameObject;
+
+				ShowCard(card, cardObj, hand.Count);
+
+				hand.Add(card);
+
+				ShowValue();
+			}
+		}
+
+		//SHOW CARD: apply the info of the card to the cardObj game object
+		protected void ShowCard(DeckOfCards.Card card, GameObject cardObj, int pos)
+		{
+			cardObj.name = card.ToString();
+
+			cardObj.transform.SetParent(handBase.transform);
+			cardObj.GetComponent<RectTransform>().localScale = new Vector2(1, 1);
+			cardObj.GetComponent<RectTransform>().anchoredPosition = 
+				new Vector2(
+					xOffset + pos * 110, 
+					yOffset);
+
+			cardObj.GetComponentInChildren<Text>().text = deck.GetNumberString(card);
+			cardObj.GetComponentsInChildren<Image>()[1].sprite = deck.GetSuitSprite(card);
+		}
+
+		//SHOW VALUE: calculates and displays hand value on screen
+		protected virtual void ShowValue()
+		{
+			handVals = GetHandValue();
 			
-		total.text = "Player: " + handVals;
+			total.text = "Player: " + handVals;
 
-		if(handVals > 21){
-			GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().PlayerBusted();
+			if(handVals > BlackJackManager.Target)
+			{
+				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().PlayerBusted();
+			}
 		}
-	}
 
-	public int GetHandValue(){
-		BlackJackManager manager = GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>();
+		//GET HAND VALUE: gets hand value via the BlackJackManager, see use in ShowValue()
+		protected int GetHandValue()
+		{
+			BlackJackManager manager = GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>();
 
-		return manager.GetHandValue(hand);
+			return manager.GetHandValue(hand);
+		}
 	}
 }
