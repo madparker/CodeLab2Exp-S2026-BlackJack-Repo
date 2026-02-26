@@ -21,6 +21,7 @@ namespace Core
 		[SerializeField] private Slider betSlider;
 		[SerializeField] private Text betText;
 		[SerializeField] private Text cashText;
+		[SerializeField] private GameObject handHider;
 		
 		
 		#region Win/Lose Conditions
@@ -94,6 +95,7 @@ namespace Core
 
 		public void Reset()
 		{
+			handHider.SetActive(true);
 			HideAllUI();
 			ShowBet();
 		}
@@ -114,6 +116,8 @@ namespace Core
 			betButton.gameObject.SetActive(false);
 			betSlider.gameObject.SetActive(false);
 			tryAgain.gameObject.SetActive(false);
+			handHider.SetActive(true);
+
 		}
 
 		//SHOW BET: show bet button and slider and set max value on slider
@@ -134,6 +138,8 @@ namespace Core
 			
 			hitButton.gameObject.SetActive(true);
 			stayButton.gameObject.SetActive(true);
+			handHider.SetActive(false);
+
 		}
 		
 		public void HidePlay()
