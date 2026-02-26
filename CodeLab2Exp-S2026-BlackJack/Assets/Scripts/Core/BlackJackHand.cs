@@ -79,14 +79,14 @@ namespace Core
 			total.text = "Player: " + handVals;
 
 			//disable stay button if less than 16
-			if(handVals <= 16)
-			{
-				stayButton.interactable = false;
-			}
-			else
-			{
-				stayButton.interactable = true;
-			}
+			// if(handVals <= 16)
+			// {
+			// 	stayButton.interactable = false;
+			// }
+			// else
+			// {
+			// 	stayButton.interactable = true;
+			// }
 
 			if(handVals > BlackJackManager.Target)
 			{
