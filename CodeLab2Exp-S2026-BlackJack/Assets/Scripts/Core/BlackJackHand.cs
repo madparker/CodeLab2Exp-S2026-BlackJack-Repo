@@ -11,6 +11,8 @@ namespace Core
 		public float yOffset;
 		public GameObject handBase;
 		public int handVals;
+		//button controller
+		public Button stayButton;
 
 		protected DeckOfCards deck;
 		protected List<DeckOfCards.Card> hand;
@@ -76,9 +78,25 @@ namespace Core
 			
 			total.text = "Player: " + handVals;
 
+			//disable stay button if less than 16
+			if(handVals <= 16)
+			{
+				stayButton.interactable = false;
+			}
+			else
+			{
+				stayButton.interactable = true;
+			}
+
 			if(handVals > BlackJackManager.Target)
 			{
 				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().PlayerBusted();
+			}
+			
+			//trigger black jack condition if hand totals target
+			if (handVals == BlackJackManager.Target)
+			{
+				GameObject.Find("BlackJackManager").GetComponent<BlackJackManager>().BlackJack();
 			}
 		}
 
