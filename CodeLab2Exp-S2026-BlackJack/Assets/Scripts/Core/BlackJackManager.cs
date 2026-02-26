@@ -164,22 +164,27 @@ namespace Core
 
 		public virtual int GetHandValue(List<DeckOfCards.Card> hand)
 		{
-			//check the high values of each cards
-			int handValue = 0;
-			foreach(DeckOfCards.Card handCard in hand){
-				handValue += handCard.GetCardHighValue();
+			int total = 0;
+			int aceCount = 0;
+
+			
+			foreach (var c in hand)
+			{
+				int low = c.GetCardLowValue();
+				total += low;
+
+				if (c.cardNum == DeckOfCards.Card.Type.A)
+					aceCount++;
 			}
 
-			//if high value exceeds target, check low values
-			if (handValue > Target)
+			
+			while (aceCount > 0 && total + 10 <= Target)
 			{
-				handValue = 0;
-				foreach(DeckOfCards.Card handCard in hand){
-					handValue += handCard.GetCardLowValue();
-				}
+				total += 10;
+				aceCount--;
 			}
-		
-			return handValue;
+
+			return total;
 		}
 	}
 }
